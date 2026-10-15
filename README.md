@@ -38,18 +38,18 @@ Instale **somente no projeto de destino**, com uma conta administradora. Não ex
 Pela CLI incluída no projeto:
 
 ```powershell
-npx supabase login --profile acervo
-npx supabase link --project-ref sivtgmclfgebjippxgxp --profile acervo
-npx supabase db push --linked --dry-run --profile acervo
-npx supabase db push --linked --profile acervo
+npx supabase login --name Acervo-Patrimonial --agent no --output-format text
+npx supabase projects list
+npx supabase db push --project-ref sivtgmclfgebjippxgxp --dry-run
+npx supabase db push --project-ref sivtgmclfgebjippxgxp
 ```
 
-Se a CLI solicitar a senha do banco, digite no próprio prompt. Não grave a senha em comandos ou arquivos. O perfil `acervo` mantém separado o acesso usado por outros projetos.
+Conclua o login no navegador padrão (Chrome ou Edge) com a conta que contém o projeto `sivtgmclfgebjippxgxp`. Confirme que ele aparece na listagem antes de continuar. O login da CLI é separado do login no painel e do plugin do Codex. Se a CLI solicitar código de verificação ou senha do banco, digite no próprio prompt; não grave credenciais em comandos ou arquivos. Na CLI 2.121.0, `--profile acervo` não cria uma conta separada e falha sem um arquivo de configuração válido; use os comandos acima.
 
 Alternativa: abra o [SQL Editor do projeto](https://supabase.com/dashboard/project/sivtgmclfgebjippxgxp/sql/new), cole o conteúdo **completo** de [20261015150829_acervo_cloud.sql](supabase/migrations/20261015150829_acervo_cloud.sql) e execute uma vez. Se adotar a CLI depois, registre a versão como aplicada **somente após conferir que o arquivo inteiro foi executado**:
 
 ```powershell
-npx supabase migration repair 20261015150829 --status applied --project-ref sivtgmclfgebjippxgxp --profile acervo
+npx supabase migration repair 20261015150829 --status applied --project-ref sivtgmclfgebjippxgxp
 ```
 
 A migração cria tabelas `acervo_*`, índices e vínculos, regras RLS, RPCs transacionais, secretarias/categorias iniciais e o bucket privado `acervo-photos`. Não insere patrimônios demonstrativos, usuários ou acessos públicos. Execute os Security Advisors do projeto após a instalação.
