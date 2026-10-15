@@ -39,7 +39,13 @@ Executada em 15/10/2026, no Windows, Node.js 24.18.0 e Microsoft Edge com contex
 - Demonstração por ação explícita em desenvolvimento e ausência do botão no build de produção.
 - No build de produção: cadastro, recarregamento, módulos divididos, exportação/restauração e ausência de overflow horizontal em 320, 390, 768, 1024 e 1440 px.
 
-## Limites da verificação
+## Correção do deploy Vercel — 15/10/2026
+
+Projeto verificado: `infraestrutura-fb/acervo-patrimonial`. As três variáveis públicas `VITE_*` foram substituídas pelos valores fornecidos e cadastradas como Config em Production e Preview. Deploy de produção `dpl_B4z7tKJZCADiQAUHuXfnvroouvwc`, do mesmo código `d939d07`, concluído com estado READY; o domínio `acervo-patrimonial.vercel.app` aponta para ele.
+
+Verificação no endereço publicado: `/` e `/configuracoes` responderam HTTP 200 e exibiram o login, sem a mensagem de conexão não configurada. Campos de e-mail/senha e botão Entrar disponíveis, inventário inacessível anonimamente, sem erros JavaScript e sem overflow nas larguras de 390 e 1440 px. Consulta dos logs de runtime desse deploy, filtrada por erros nos 10 minutos anteriores à verificação, retornou zero registros. A verificação não incluiu login real nem operações no inventário, pois o esquema Supabase continua ausente.
+
+## Limites da verificação Supabase
 
 Na integração Supabase, os testes de navegador utilizam o SDK real com APIs interceptadas e credenciais fictícias. Os testes SQL utilizam PostgreSQL embarcado (PGlite) com schemas Auth/Storage simulados. Não foram criadas contas ou gravados dados no projeto hospedado.
 

@@ -2,7 +2,7 @@
 
 Inventário operacional das Secretarias de Urbanismo e Interior de Francisco Beltrão. React, TypeScript e Vite, com experiência dinâmica de lista + ficha. Não substitui o sistema patrimonial/contábil oficial.
 
-Dois modos: **local** (IndexedDB) e **nuvem** (Supabase Auth, PostgreSQL e Storage privado). O frontend está preparado para Vercel; não há publicação automática nesta entrega.
+Dois modos: **local** (IndexedDB) e **nuvem** (Supabase Auth, PostgreSQL e Storage privado). Frontend publicado em [acervo-patrimonial.vercel.app](https://acervo-patrimonial.vercel.app/), no projeto Vercel `infraestrutura-fb/acervo-patrimonial`.
 
 ## Estado da integração
 
@@ -72,6 +72,8 @@ Confirme que uma conta foi encontrada. Para funcionários, use `editor` em vez d
 Não há cadastro público no aplicativo. Mesmo uma conta criada fora da interface não acessa o inventário sem inclusão nessa lista. Para revogar o acesso, defina `active = false`. As regras do banco/Storage consultam a lista em cada operação, sem depender de metadados editáveis do usuário. O histórico novo registra o UUID autenticado; o nome na verificação presencial continua sendo texto livre.
 
 ## Publicar no Vercel
+
+Em 15/10/2026, as três variáveis `VITE_*` foram configuradas como **Config** em Production e Preview, e o deploy de produção foi refeito. O endereço público abre o login; a instalação do banco e a autorização da primeira conta continuam pendentes conforme as seções acima. Conectar a integração Supabase no Vercel também pode criar variáveis `SUPABASE_*` ou `NEXT_PUBLIC_*`; este aplicativo Vite utiliza especificamente os nomes `VITE_*` abaixo.
 
 Importe [RezidenteGamer/Acervo-Patrimonial](https://github.com/RezidenteGamer/Acervo-Patrimonial):
 
