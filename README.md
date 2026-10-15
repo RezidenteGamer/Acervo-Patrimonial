@@ -6,9 +6,9 @@ Dois modos: **local** (IndexedDB) e **nuvem** (Supabase Auth, PostgreSQL e Stora
 
 ## Estado da integração
 
-Projeto de destino: `sivtgmclfgebjippxgxp`, informado pelo responsável. A URL e a chave publicável responderam ao teste de conexão. **A migração ainda precisa ser instalada nesse projeto**: o teste remoto confirmou que `acervo_assets` está ausente. O plugin administrativo não respondeu após a troca de conta, e a CLI estava autenticada em outra conta sem acesso ao destino. Nenhum outro projeto foi alterado.
+Projeto de destino: `sivtgmclfgebjippxgxp`, informado pelo responsável. **Migração instalada em 15/10/2026**, com nove tabelas protegidas por RLS e bucket de fotografias privado. A primeira conta foi autorizada como administradora. O acesso administrativo foi concluído pela CLI oficial, com autenticação no navegador padrão.
 
-Os testes de PostgreSQL usam um banco PGlite isolado. Os testes cloud de navegador interceptam as APIs com respostas controladas; não equivalem à validação no Supabase hospedado. Consulte [VALIDACAO.md](VALIDACAO.md).
+Além das suítes isoladas (PGlite e APIs interceptadas), foi validado o Supabase hospedado: sessão autorizada, catálogo pela API, upload/download/exclusão de foto privada e painel publicado no Vercel. Cadastro, edição, transferência e histórico passaram em uma transação revertida ao final. Consulte [VALIDACAO.md](VALIDACAO.md).
 
 ## Executar
 
@@ -33,7 +33,7 @@ Nunca coloque `service_role`, `sb_secret_`, senha do banco ou access token admin
 
 ## Instalar o banco Supabase
 
-Instale **somente no projeto de destino**, com uma conta administradora. Não execute a migração novamente se as tabelas `acervo_*` já existirem; confira o histórico antes.
+A migração `20261015150829` já está instalada no projeto de destino. As instruções abaixo servem para novas instalações ou migrações posteriores. Não execute o SQL inicial novamente se as tabelas `acervo_*` já existirem; confira o histórico antes.
 
 Pela CLI incluída no projeto:
 
@@ -56,6 +56,8 @@ A migração cria tabelas `acervo_*`, índices e vínculos, regras RLS, RPCs tra
 
 ## Autorizar a primeira conta
 
+A conta inicial já está autorizada. Para adicionar outras contas ou repetir a configuração em uma instalação nova:
+
 1. Em **Authentication → Users**, crie a conta com e-mail e senha. A senha é definida pelo responsável, fora do código.
 2. No SQL Editor, substitua o e-mail abaixo pela conta criada e execute:
 
@@ -73,7 +75,7 @@ Não há cadastro público no aplicativo. Mesmo uma conta criada fora da interfa
 
 ## Publicar no Vercel
 
-Em 15/10/2026, as três variáveis `VITE_*` foram configuradas como **Config** em Production e Preview, e o deploy de produção foi refeito. O endereço público abre o login; a instalação do banco e a autorização da primeira conta continuam pendentes conforme as seções acima. Conectar a integração Supabase no Vercel também pode criar variáveis `SUPABASE_*` ou `NEXT_PUBLIC_*`; este aplicativo Vite utiliza especificamente os nomes `VITE_*` abaixo.
+Em 15/10/2026, as três variáveis `VITE_*` foram configuradas como **Config** em Production e Preview, e o deploy de produção foi refeito. O endereço público abre o login e permite acesso ao inventário com a conta autorizada. Conectar a integração Supabase no Vercel também pode criar variáveis `SUPABASE_*` ou `NEXT_PUBLIC_*`; este aplicativo Vite utiliza especificamente os nomes `VITE_*` abaixo.
 
 Importe [RezidenteGamer/Acervo-Patrimonial](https://github.com/RezidenteGamer/Acervo-Patrimonial):
 
@@ -133,6 +135,6 @@ npm run build
 
 Os testes SQL usam PostgreSQL embarcado (PGlite) com schemas de Auth/Storage e papéis simulados. Os testes cloud de navegador usam o SDK real do Supabase com APIs interceptadas e credenciais fictícias, sem escrever no projeto real. No Windows, o Playwright utiliza Edge quando instalado; em outros ambientes instale Chromium com `npx playwright install chromium`.
 
-GitHub Actions executa os testes de integridade e o build em Node 24. A câmera física, Safari/iOS, quota real do Storage e a integração ponta a ponta no Supabase hospedado dependem de validação no ambiente de destino.
+GitHub Actions executa os testes de integridade e o build em Node 24. A validação real de Auth, catálogo e Storage e seus limites estão registrados em `VALIDACAO.md`. Câmera física, Safari/iOS e esgotamento da quota real do Storage dependem de validação adicional.
 
 Referências: [segurança do frontend Supabase](https://supabase.com/docs/guides/database/secure-data), [Storage privado](https://supabase.com/docs/guides/storage/buckets/fundamentals), [Vite no Vercel](https://vercel.com/docs/frameworks/frontend/vite).

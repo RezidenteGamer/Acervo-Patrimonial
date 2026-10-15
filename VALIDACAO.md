@@ -41,15 +41,30 @@ Executada em 15/10/2026, no Windows, Node.js 24.18.0 e Microsoft Edge com contex
 
 ## Correção do deploy Vercel — 15/10/2026
 
-Projeto verificado: `infraestrutura-fb/acervo-patrimonial`. As três variáveis públicas `VITE_*` foram substituídas pelos valores fornecidos e cadastradas como Config em Production e Preview. Deploy de produção `dpl_B4z7tKJZCADiQAUHuXfnvroouvwc`, do mesmo código `d939d07`, concluído com estado READY; o domínio `acervo-patrimonial.vercel.app` aponta para ele.
+Projeto verificado: `infraestrutura-fb/acervo-patrimonial`. As três variáveis públicas `VITE_*` foram substituídas pelos valores fornecidos e cadastradas como Config em Production e Preview. O deploy da correção `dpl_B4z7tKJZCADiQAUHuXfnvroouvwc`, do código `d939d07`, foi concluído com estado READY e publicado em `acervo-patrimonial.vercel.app`. Novos pushes no repositório geram publicações posteriores pela integração Git.
 
-Verificação no endereço publicado: `/` e `/configuracoes` responderam HTTP 200 e exibiram o login, sem a mensagem de conexão não configurada. Campos de e-mail/senha e botão Entrar disponíveis, inventário inacessível anonimamente, sem erros JavaScript e sem overflow nas larguras de 390 e 1440 px. Consulta dos logs de runtime desse deploy, filtrada por erros nos 10 minutos anteriores à verificação, retornou zero registros. A verificação não incluiu login real nem operações no inventário, pois o esquema Supabase continua ausente.
+Verificação inicial no endereço publicado: `/` e `/configuracoes` responderam HTTP 200 e exibiram o login, sem a mensagem de conexão não configurada. Campos de e-mail/senha e botão Entrar disponíveis, inventário inacessível anonimamente, sem erros JavaScript e sem overflow nas larguras de 390 e 1440 px. Consulta dos logs de runtime desse deploy, filtrada por erros nos 10 minutos anteriores à verificação, retornou zero registros.
+
+## Instalação e validação no Supabase hospedado — 15/10/2026
+
+- Autenticação administrativa concluída pela CLI oficial no navegador padrão. Projeto de destino confirmado antes de qualquer escrita.
+- Migração `20261015150829_acervo_cloud.sql` aplicada pela CLI e registrada no histórico remoto.
+- Nove tabelas `acervo_*`, todas com RLS habilitado; duas secretarias e nove categorias iniciais.
+- Bucket `acervo-photos` privado, imagens JPEG/PNG/WebP e limite de 20 MB. API anônima recusada com HTTP 401; funções públicas sem privilégio de execução para `anon`, e escrita direta em patrimônios revogada para `authenticated`.
+- Conta existente corrigida pela API oficial do Supabase Auth conforme escolha do responsável, mantendo a senha, e autorizada como administradora.
+- Cadastro, código gerado no servidor, edição, transferência com código preservado, leitura da ficha e ator no histórico aprovados no PostgreSQL hospedado, usando o papel `authenticated`. Teste executado em transação revertida: zero patrimônios e zero contadores ao final.
+- Sessão real temporária de Auth gerada administrativamente, sem envio de e-mail ou mudança de senha. SDK público confirmou papel de administrador e catálogo real pela Data API.
+- Upload, download com comparação SHA-256, bloqueio de URL pública e exclusão de imagem temporária aprovados no Storage real.
+- Navegador isolado no domínio publicado abriu inventário e configurações de administrador, preservou a sessão após recarregamento e exibiu layout móvel de 390 px sem overflow ou erros JavaScript.
+- Sessão temporária encerrada e arquivo temporário removido. Consulta final confirmou um administrador ativo, zero patrimônios, zero contadores e zero imagens armazenadas.
+
+Advisors executados: nenhum erro de segurança ou desempenho no esquema. Um aviso de proteção contra senhas vazadas desabilitada no Auth ([orientação e disponibilidade em Pro+](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)) e sete avisos informativos de índices ainda não utilizados, esperados em uma base recém-instalada. Os índices foram preservados.
 
 ## Limites da verificação Supabase
 
-Na integração Supabase, os testes de navegador utilizam o SDK real com APIs interceptadas e credenciais fictícias. Os testes SQL utilizam PostgreSQL embarcado (PGlite) com schemas Auth/Storage simulados. Não foram criadas contas ou gravados dados no projeto hospedado.
+As suítes versionadas de navegador em nuvem utilizam o SDK real com APIs interceptadas e credenciais fictícias. Os testes SQL versionados utilizam PostgreSQL embarcado (PGlite) com schemas Auth/Storage simulados. A verificação hospedada descrita acima foi adicional, com sessão real e arquivo temporário.
 
-O teste remoto da URL/chave publicável informadas retornou HTTP 200 em `/auth/v1/settings`. A consulta sem registros à tabela `acervo_assets` retornou HTTP 404, código `PGRST205`, confirmando que a instalação do esquema ainda está pendente no projeto de destino. Acesso administrativo, aplicação da migração, criação/autorização da primeira conta e verificação dos Advisors no Supabase real permanecem pendentes por falta de conexão administrativa funcional.
+O login por senha deve ser realizado pelo responsável com sua senha existente; a validação automatizada utilizou uma sessão temporária de Auth, sem conhecer ou alterar a senha. Os testes de escrita no banco real foram executados por RPC dentro de uma transação revertida, e não por um cadastro persistente na interface. Restauração completa e migração de dados pessoais continuam exigindo uma ação explícita do administrador.
 
 Não foram executados testes em câmera física de celular, Safari/iOS, Firefox, leitores de tela, esgotamento real da quota de armazenamento ou backups próximos de 500 MB. Os layouts móveis foram emulados no Edge/Chromium. O tratamento de quota e validação de tamanho estão implementados, mas não equivalem a esses testes físicos/de carga.
 
